@@ -1,29 +1,25 @@
 # dockerized glastopf v3
 
+## 一、项目介绍<br>
+[glastopf](https://github.com/glastopf/glastopf) 是基于python的web型蜜罐。<br>
+此项目是将glastopf制作成docker镜像，包含定制该蜜罐的配置文件以及build docker镜像的Dockerfile。<br>
+此项目作为多蜜罐项目 **[Multi-Honeypots]** 的一个蜜罐部件。<br>
 
-[glastopf](https://github.com/glastopf/glastopf) is a python web application honeypot.
+## 二、蜜罐介绍<br>
 
-This repository contains the necessary files to create a *dockerized* version of glastopf v3.
+glastopf蜜罐可以针对已知和未知的漏洞给出响应，通过维护Dork列表吸引攻击者。<br>
+通过PHP沙盒支持远程文件包含，虚拟文件系统支持本地文件包含，通过POST请求<br>
+实现HTML注入。支持对SQL注入的分类和解析。
 
-This dockerized version is part of the **[Multi-Honeypots]** of douwanhu.
+## 三、威胁数据<br>
 
-The `Dockerfile` contains the blueprint for the dockerized glastopf and will be used to setup the docker image.  
+所有的威胁数据存储至/data/glastopf/下<br>
+log存储至/data/glastopf/galstpof.log，主要记录了请求的细节<br>
+更详实的记录以DB的形式保存至 /data/glastopf/db/glastpof.db<br>
 
-The `glastopf.cfg` is tailored to fit the Multi-Honeypots environment.
+为避免磁盘空间占用过大，多蜜罐系统默认24小时重启一次，且重启后清除<br>
+/data/下的数据，并在清除之前将所有数据导入到已部署的MySQL数据库中<br>
 
-The `supervisord.conf` is used to start glastopf under supervision of supervisord.
-
-Using systemd, copy the `systemd/glastopf.service` to `/etc/systemd/system/glastopf.service` and start using
-
-```
-systemctl enable glastopf
-systemctl start glastopf
-```
-
-This will make sure that the docker container is started with the appropriate permissions and port mappings. Further, it autostarts during boot.
-
-By default all data will be stored in `/data/glastopf/` until the honeypot service will be restarted which is by default every 24 hours. If you want to keep data persistently simply edit the ``service`` file, find the line that contains ``clean.sh`` and set the option from ``off`` to ``on``. Be advised to establish some sort of log management if you wish to do so.
-
-# Glastopf Dashboard
-
+附在公网上90天cowrie捕获到的威胁数据统计报告dashboard<br>
 ![Glastopf Dashboard](https://raw.githubusercontent.com/douwanhu/docker-glastopf/master/doc/dashboard.png)
+
